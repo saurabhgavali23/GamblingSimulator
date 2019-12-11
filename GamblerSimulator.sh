@@ -61,9 +61,16 @@ function main(){
 
 gamblingForDay
 getDailyAmt
-getLuckyUnLuckyDay
 
-echo "Total Amt" $( printf "%d\n" ${totalAmt[@]} | awk '{sum+=$0}END{print sum}' )
+totalAmt=$( printf "%d\n" ${totalAmt[@]} | awk '{sum+=$0}END{print sum}' )
+
+	if (( $totalAmt <= 0 ))
+	then
+		main
+	fi
+
+getLuckyUnLuckyDay
+echo "$totalAmt"
 }
 
 main

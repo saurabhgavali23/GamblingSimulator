@@ -18,7 +18,7 @@ function gamblingForDay(){
 for (( day=1;day<=20;day++ ))
 do
 
-		cash=$STAKE
+	cash=$STAKE
 	while (( $cash > $lowLimit && $cash < $highLimit ))
 	do
 
@@ -37,11 +37,33 @@ do
 done
 }
 
-gamblingForDay
+function getDailyAmt(){
 
-for ((i=1;i<=20;i++))
-do
-	echo "Day_$i ${totalAmt[Day_$i]}"
-done
+	for ((i=1;i<=20;i++))
+	do
+		echo "Day_$i ${totalAmt[Day_$i]}"
+	done
+}
+
+function getLuckyUnLuckyDay(){
+
+	totalAmt[Day_0]=0
+	for ((i=1;i<=20;i++))
+		do
+
+		k=$(( $i - 1 ))
+		totalAmt[Day_$i]=$(( ${totalAmt[Day_$i]} + ${totalAmt[Day_$k]} ))
+		echo "Day$i ${totalAmt[Day_$i]}"
+		done | sort -k2 -nr | awk 'NR==20{print "UnLucky " $0}AND NR==1{print "Lucky " $0}'
+}
+
+function main(){
+
+gamblingForDay
+getDailyAmt
+getLuckyUnLuckyDay
 
 echo "Total Amt" $( printf "%d\n" ${totalAmt[@]} | awk '{sum+=$0}END{print sum}' )
+}
+
+main

@@ -7,8 +7,6 @@ STAKE=100
 cash=0
 totalDay=20
 day=0
-win=0
-loss=0
 
 lowLimit=$(($STAKE/2))
 highLimit=$(($STAKE + $lowLimit))
@@ -28,21 +26,22 @@ do
 		case $winloss in
 
 		1)
-			cash=$(($cash+1))
-			win=$(($win+1));;
+			cash=$(($cash+1));;
 		0)
-			cash=$(($cash-1))
-			loss=$(($loss+1));;
+			cash=$(($cash-1));;
 		esac
 	done
 
-	totalAmt["Day_$day"]=$win" "$loss
+	winLossDiff=$(($cash-$STAKE))
+	totalAmt["Day_$day"]=$winLossDiff
 done
 }
 
 gamblingForDay
 
-for result in ${!totalAmt[@]}
+for ((i=1;i<=20;i++))
 do
-	echo $result "${totalAmt[$result]}"
-done | sort -k2 -n
+	echo "Day_$i ${totalAmt[Day_$i]}"
+done
+
+echo "Total Amt" $( printf "%d\n" ${totalAmt[@]} | awk '{sum+=$0}END{print sum}' )

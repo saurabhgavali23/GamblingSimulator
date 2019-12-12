@@ -3,6 +3,8 @@ echo "Welcome Gambler Game"
 
 BET=1
 STAKE=100
+WIN=1
+LOSS=0
 
 cash=0
 totalDay=20
@@ -25,9 +27,9 @@ do
 		winloss=$((RANDOM%2))
 		case $winloss in
 
-		1)
+		$WIN)
 			cash=$(($cash+1));;
-		0)
+		$LOSS)
 			cash=$(($cash-1));;
 		esac
 	done
@@ -49,28 +51,29 @@ function getLuckyUnLuckyDay(){
 
 	totalAmt[Day_0]=0
 	for ((i=1;i<=20;i++))
-		do
+	do
 
 		k=$(( $i - 1 ))
 		totalAmt[Day_$i]=$(( ${totalAmt[Day_$i]} + ${totalAmt[Day_$k]} ))
 		echo "Day$i ${totalAmt[Day_$i]}"
-		done | sort -k2 -nr | awk 'NR==20{print "UnLucky " $0}AND NR==1{print "Lucky " $0}'
+	done | sort -k2 -nr | awk 'NR==20{print "UnLucky " $0}AND NR==1{print "Lucky " $0}'
 }
 
-function main(){
-
-gamblingForDay
-getDailyAmt
-
-totalAmt=$( printf "%d\n" ${totalAmt[@]} | awk '{sum+=$0}END{print sum}' )
-
-	if (( $totalAmt <= 0 ))
+function playNxtMnthOrNot()
+{
+	if (( $1 <= 0 ))
 	then
 		main
 	fi
+}
 
+function main()
+{
+gamblingForDay
+getDailyAmt
+totalAmt=$( printf "%d\n" ${totalAmt[@]} | awk '{sum+=$0}END{print sum}' )
+playNxtMnthOrNot $totalAmt
 getLuckyUnLuckyDay
-echo "$totalAmt"
 }
 
 main

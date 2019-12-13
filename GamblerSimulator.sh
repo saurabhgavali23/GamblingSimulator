@@ -54,12 +54,12 @@ function getLuckyUnLuckyDay(){
 	for ((i=1;i<=20;i++))
 	do
 
-			val=$(( $i + 1 ))
-			if (( val <= 20 ))
-			then
-				totalAmt[Day_$i]=$(( ${totalAmt[Day_$i]} + ${totalAmt[Day_$val]} ))
-			fi
-			echo "Day$i ${totalAmt[Day_$i]}"
+		val=$(( $i + 1 ))
+		if (( val <= 20 ))
+		then
+			totalAmt[Day_$i]=$(( ${totalAmt[Day_$i]} + ${totalAmt[Day_$val]} ))
+		fi
+		echo "Day$i ${totalAmt[Day_$i]}"
 
 	done | sort -k2 -nr | awk 'NR==20{print "UnLucky " $0}AND NR==1{print "Lucky " $0}'
 }
